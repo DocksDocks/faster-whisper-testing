@@ -19,5 +19,5 @@ pip install -r requirements.txt
 
 
 
-if anything goes wrong please go to:
+if anything goes wrong please check docs on:
 https://github.com/guillaumekln/faster-whisper
