@@ -1,6 +1,6 @@
 install dependencies
 ```
-sudo apt update && sudo apt install ffmpeg python3-venv python3-tk nvidia-cudnn -y
+sudo apt update && sudo apt install ffmpeg python3-venv nvidia-cudnn -y
 ```
 
 start env
