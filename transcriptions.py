@@ -16,7 +16,7 @@ def seconds_to_mmss(seconds):
 model_size = "large-v2"
 
 # Run on GPU with FP16
-model = WhisperModel(model_size, device="cuda", compute_type="float16")
+model = WhisperModel(model_size, device="cuda", compute_type="float32")
 
 # or run on GPU with INT8
 # model = WhisperModel(model_size, device="cuda", compute_type="int8_float16")
@@ -35,8 +35,8 @@ audio_files = [f for f in os.listdir(input_folder) if f.endswith(".mp3")]
 for audio_file in audio_files:
     # Load the audio and pad/trim it to fit 30 seconds
     audio_path = os.path.join(input_folder, audio_file)
-    segments, info = model.transcribe(audio_path, beam_size=10, patience=5, vad_filter=True)
-
+    segments, info = model.transcribe(audio_path, language="pt", best_of = 5,  condition_on_previous_text=False,
+                                       beam_size=5, vad_filter=True, vad_parameters=dict(min_silence_duration_ms=500))
     print("Detected language '%s' with probability %f" % (info.language, info.language_probability))
 
     final_text_with_timestamps = ""
@@ -44,7 +44,7 @@ for audio_file in audio_files:
 
     for segment in segments:
         final_text_with_timestamps += "[%s -> %s] %s" %(seconds_to_mmss(segment.start), seconds_to_mmss(segment.end), segment.text.strip()) + "\n"
-        final_text+=  segment.text.strip() + "\n" 
+        final_text+=  segment.text.strip() + "\n"
         print("[%s -> %s] %s" % (seconds_to_mmss(segment.start), seconds_to_mmss(segment.end), segment.text))
         # Write the recognized text to the output file
     output_final_file_name = os.path.splitext(audio_file)[0] + "_output_final.txt"
